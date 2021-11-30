@@ -1,16 +1,17 @@
+import express, { Request, Response } from 'express';
 import bodyParser from 'body-parser';
-import { config as dotenv } from 'dotenv';
-import express from 'express';
+import userRoutes from './handlers/user';
 import morgan from 'morgan';
-import userRoutes from './routes/api/user';
-dotenv();
 
 const app: express.Application = express();
+const port = 3000;
 
 app.use(bodyParser.json());
+app.use(morgan('dev'));
 
-const port = process.env.PORT ?? 3000;
-morgan('tiny');
+app.get('/', (_req: Request, res: Response) => {
+	res.send('Hello World');
+});
 
 userRoutes(app);
 

@@ -4,7 +4,7 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"start": "node src/server/server.ts",
+		"start": "nodemon src/server/server.ts",
 		"watch": "tsc-watch --esModuleInterop src/server/server.ts --outDir ./dist --onSuccess 'node ./dist/server.js'",
 		"migrate": "db-migrate --env test up && db-migrate up",
 		"test": "ENV=test db-migrate --env test up && jasmine-ts && db-migrate db:drop test",
