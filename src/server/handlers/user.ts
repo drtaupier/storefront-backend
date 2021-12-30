@@ -1,51 +1,104 @@
 import express, { Request, Response } from 'express';
+import verifyAuthToken from '../middlewares/auth';
 import { User, UserStore } from '../models/user';
+import jwt, { Secret } from 'jsonwebtoken';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const store = new UserStore();
 
 const index = async (_req: Request, res: Response) => {
-	const users = await store.index();
-	res.json(users);
+	try {
+		const authorizationHeader = _req.headers.authorization!;
+		const token = authorizationHeader.split('')[1];
+		jwt.verify(token, process.env.TOKEN_SECRET as Secret);
+	} catch (error) {
+		res.json('Access denied, invalid token' + error);
+		return;
+	}
+
+	try {
+		const users = await store.index();
+		res.json(users);
+	} catch (error) {
+		res.status(400).json(error);
+	}
 };
 
 const show = async (req: Request, res: Response) => {
-	const user = await store.show(req.body.id);
-	res.json(show);
+	try {
+		const authorizationHeader = req.headers.authorization!;
+		const token = authorizationHeader.split('')[1];
+		jwt.verify(token, process.env.TOKEN_SECRET as Secret);
+	} catch (error) {
+		res.json('Access denied, invalid token' + error);
+		return;
+	}
+
+	try {
+		const user = await store.show(req.params.user_id);
+		res.json(user);
+	} catch (error) {
+		res.status(400).json(error);
+	}
 };
 
 const create = async (req: Request, res: Response) => {
 	try {
 		const user: User = {
-			name: req.body.name,
+			firstname: req.body.firstname,
 			lastname: req.body.lastname,
 			username: req.body.username,
 			password: req.body.password,
-			role: req.body.role,
-			active: req.body.active,
-			id: req.body.id,
+			role_id: req.body.role_id,
 		};
-
 		const newUser = await store.create(user);
 		res.json(newUser);
 	} catch (error) {
 		res.status(400).json(error);
 	}
-	const user = await store.create(req.body);
 };
 
 const destroy = async (req: Request, res: Response) => {
-	const user = await store.delete(req.body.id);
-	res.json({
-		status: 'ok',
-		msg: 'Deleted',
-	});
+	try {
+		const authorizationHeader = req.headers.authorization!;
+		const token = authorizationHeader.split('')[1];
+		jwt.verify(token, process.env.TOKEN_SECRET as Secret);
+	} catch (error) {
+		res.json('Access denied, invalid token' + error);
+		return;
+	}
+	try {
+		const user = await store.delete(req.params.user_id);
+		res.status(200).json(user);
+	} catch (error) {
+		res.status(400).json(error);
+	}
 };
 
-const userRoutes = (app: express.Application) => {
-	app.get('/users', index);
-	app.get('users/:id', show);
-	app.post('/users', create);
-	app.post('/users/:id', destroy);
+const authenticate = async (req: Request, res: Response) => {
+	const user: User = {
+		firstname: req.body.firstname,
+		lastname: req.body.lastname,
+		username: req.body.username,
+		password: req.body.password,
+		role_id: req.body.role_id,
+	};
+	try {
+		const u = await store.authenticate(user.username, user.password);
+		const token = jwt.sign({ user: u }, process.env.TOKEN_SECRET as Secret);
+		res.json(token);
+	} catch (error) {
+		res.status(401).json({ error });
+	}
+};
+
+const userRoutes = (app: express.Application): void => {
+	app.get('/users', verifyAuthToken, index);
+	app.get('/users/:user_id', verifyAuthToken, show);
+	app.post('/users/register', create);
+	app.post('/users/:user_id', verifyAuthToken, destroy);
+	app.post('/users/login', authenticate);
 };
 
 export default userRoutes;
