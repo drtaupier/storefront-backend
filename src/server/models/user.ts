@@ -1,10 +1,16 @@
 import Client from '../database';
+import bcrypt from 'bcrypt';
+import dotenv from 'dotenv';
+
+const { BCRYPT_PASSWORD, SALT_ROUNDS } = process.env;
 
 export type User = {
 	user_id?: number;
 	firstname: string;
 	lastname: string;
+	username: string;
 	password: string;
+	role_id: number;
 };
 
 export class UserStore {
@@ -33,23 +39,31 @@ export class UserStore {
 
 	async create(u: User): Promise<User> {
 		try {
-			const sql =
-				'INSERT INTO users (firstname, lastname, password) VALUES ($1, $2, $3)';
 			const conn = await Client.connect();
-			const result = await conn.query(sql, [u.firstname, u.lastname, u.password]);
+			const sql =
+				'INSERT INTO users (firstname, lastname, username, password, role_id) VALUES ($1, $2, $3, $4, $5)';
+			const hash = bcrypt.hashSync(
+				u.password + BCRYPT_PASSWORD,
+				parseInt(SALT_ROUNDS as unknown as string)
+			);
+			const result = await conn.query(sql, [
+				u.firstname,
+				u.lastname,
+				u.username,
+				hash,
+				u.role_id,
+			]);
 			const user = result.rows[0];
 			conn.release();
 			return user;
 		} catch (error) {
-			throw new Error(
-				`Cannot create the user ${u.firstname} ${u.lastname}. Error: ${error}`
-			);
+			throw new Error(`Cannot create the user ${u.username}. Error: ${error}`);
 		}
 	}
 
 	async delete(user_id: string): Promise<User> {
 		try {
-			const sql = 'DELETE FROM users WHERE id=($1)';
+			const sql = 'DELETE FROM users WHERE user_id=($1)';
 			const conn = await Client.connect();
 			const result = await conn.query(sql, [user_id]);
 			const user = result.rows[0];
@@ -58,6 +72,22 @@ export class UserStore {
 		} catch (error) {
 			throw new Error(`Could not delete book ${user_id}. Error: ${error}`);
 		}
+	}
+
+	async authenticate(username: string, password: string): Promise<string> {
+		const conn = await Client.connect();
+		const sql = 'SELECT password from users WHERE username=($1)';
+		const result = await conn.query(sql, [username]);
+		console.log(result);
+		if (result.rows.length) {
+			const newUser = result.rows[0];
+			if (bcrypt.compareSync(password + BCRYPT_PASSWORD, newUser.password)) {
+				return newUser;
+			} else {
+				throw new Error('The password is wrong, please try again.');
+			}
+		}
+		throw new Error('Invalid username, please try again.');
 	}
 }
 
