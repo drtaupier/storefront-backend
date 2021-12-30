@@ -1,7 +1,8 @@
 import express, { Request, Response } from 'express';
 import bodyParser from 'body-parser';
-import userRoutes from './handlers/user';
 import morgan from 'morgan';
+import userRoutes from './handlers/user';
+import productRoutes from './handlers/products';
 
 const app: express.Application = express();
 const port = 3000;
@@ -14,6 +15,7 @@ app.get('/', (_req: Request, res: Response) => {
 });
 
 userRoutes(app);
+productRoutes(app);
 
 app.listen(port, () => {
 	console.log(`Server started at localhost ${port}`);
