@@ -78,11 +78,8 @@ const destroy = async (req: Request, res: Response) => {
 
 const authenticate = async (req: Request, res: Response) => {
 	const user: User = {
-		firstname: req.body.firstname,
-		lastname: req.body.lastname,
 		username: req.body.username,
 		password: req.body.password,
-		role_id: req.body.role_id,
 	};
 	try {
 		const u = await store.authenticate(user.username, user.password);

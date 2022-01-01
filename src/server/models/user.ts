@@ -6,11 +6,11 @@ const { BCRYPT_PASSWORD, SALT_ROUNDS } = process.env;
 
 export type User = {
 	user_id?: number;
-	firstname: string;
-	lastname: string;
+	firstname?: string;
+	lastname?: string;
 	username: string;
 	password: string;
-	role_id: number;
+	role_id?: number;
 };
 
 export class UserStore {
