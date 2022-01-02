@@ -7,11 +7,10 @@ const verifyAuthToken = (
 	next: NextFunction
 ): void => {
 	try {
-		const { TOKEN_SECRET } = process.env;
 		const authorizationHeader: string = req.headers
-			.authorization as unknown as string;
+			.authorization! as unknown as string;
 		const token = authorizationHeader.split(' ')[1];
-		const decoded = jwt.verify(token, TOKEN_SECRET as Secret);
+		const decoded = jwt.verify(token, process.env.TOKEN_SECRET as Secret);
 		next();
 	} catch (error) {
 		res.status(401);
