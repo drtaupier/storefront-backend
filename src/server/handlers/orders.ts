@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import { Order, OrderStore } from '../models/orders';
+import verifyAuthToken from '../middlewares/auth';
 
 const store = new OrderStore();
 
@@ -30,7 +31,7 @@ const create = async (req: Request, res: Response) => {
 
 const destroy = async (req: Request, res: Response) => {
 	try {
-		const order = await store.delete(req.params.order_id);
+		const order = await store.delete(req.params.orders_id);
 		res.json({
 			status: 'ok',
 			msg: 'Deleted',
@@ -40,11 +41,11 @@ const destroy = async (req: Request, res: Response) => {
 	}
 };
 
-const productRoutes = (app: express.Application) => {
-	app.get('/orders', index);
-	app.get('/orders/:orders_id', show);
-	app.post('/orders', create);
-	app.post('/orders/:product_id', destroy);
+const ordersRoutes = (app: express.Application) => {
+	app.get('/orders', verifyAuthToken, index);
+	app.get('/orders/:orders_id', verifyAuthToken, show);
+	app.post('/orders', verifyAuthToken, create);
+	app.post('/orders/:orders_id', verifyAuthToken, destroy);
 };
 
-export default productRoutes;
+export default ordersRoutes;
