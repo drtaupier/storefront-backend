@@ -2,8 +2,6 @@ import Client from '../database';
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 
-const { BCRYPT_PASSWORD, SALT_ROUNDS } = process.env;
-
 export type User = {
 	user_id?: number;
 	firstname?: string;
@@ -43,8 +41,8 @@ export class UserStore {
 			const sql =
 				'INSERT INTO users (firstname, lastname, username, password, role_id) VALUES ($1, $2, $3, $4, $5)';
 			const hash = bcrypt.hashSync(
-				u.password + BCRYPT_PASSWORD,
-				parseInt(SALT_ROUNDS as unknown as string)
+				u.password + process.env.BCRYPT_PASSWORD,
+				parseInt(process.env.SALT_ROUNDS as unknown as string)
 			);
 			const result = await conn.query(sql, [
 				u.firstname,
@@ -81,7 +79,9 @@ export class UserStore {
 		console.log(result);
 		if (result.rows.length) {
 			const newUser = result.rows[0];
-			if (bcrypt.compareSync(password + BCRYPT_PASSWORD, newUser.password)) {
+			if (
+				bcrypt.compareSync(password + process.env.BCRYPT_PASSWORD, newUser.password)
+			) {
 				return newUser;
 			} else {
 				throw new Error('The password is wrong, please try again.');

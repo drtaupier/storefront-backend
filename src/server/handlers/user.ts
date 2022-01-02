@@ -7,16 +7,7 @@ dotenv.config();
 
 const store = new UserStore();
 
-const index = async (_req: Request, res: Response) => {
-	try {
-		const authorizationHeader = _req.headers.authorization!;
-		const token = authorizationHeader.split('')[1];
-		jwt.verify(token, process.env.TOKEN_SECRET as Secret);
-	} catch (error) {
-		res.json('Access denied, invalid token' + error);
-		return;
-	}
-
+const index = async (req: Request, res: Response) => {
 	try {
 		const users = await store.index();
 		res.json(users);
@@ -26,15 +17,6 @@ const index = async (_req: Request, res: Response) => {
 };
 
 const show = async (req: Request, res: Response) => {
-	try {
-		const authorizationHeader = req.headers.authorization!;
-		const token = authorizationHeader.split('')[1];
-		jwt.verify(token, process.env.TOKEN_SECRET as Secret);
-	} catch (error) {
-		res.json('Access denied, invalid token' + error);
-		return;
-	}
-
 	try {
 		const user = await store.show(req.params.user_id);
 		res.json(user);
@@ -60,14 +42,6 @@ const create = async (req: Request, res: Response) => {
 };
 
 const destroy = async (req: Request, res: Response) => {
-	try {
-		const authorizationHeader = req.headers.authorization!;
-		const token = authorizationHeader.split('')[1];
-		jwt.verify(token, process.env.TOKEN_SECRET as Secret);
-	} catch (error) {
-		res.json('Access denied, invalid token' + error);
-		return;
-	}
 	try {
 		const user = await store.delete(req.params.user_id);
 		res.status(200).json(user);
@@ -95,7 +69,7 @@ const userRoutes = (app: express.Application): void => {
 	app.get('/users/:user_id', verifyAuthToken, show);
 	app.post('/users/register', create);
 	app.post('/users/:user_id', verifyAuthToken, destroy);
-	app.post('/users/login', authenticate);
+	app.post('/user/login', authenticate);
 };
 
 export default userRoutes;
