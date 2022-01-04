@@ -1,56 +1,69 @@
-# API Requirements
+# Storefront
 
-The company stakeholders want to create an online storefront to showcase their great product ideas. Users need to be able to browse an index of all products, see the specifics of a single product, and add products to an order that they can view in a cart page. You have been tasked with building the API that will support this application, and your coworker is building the frontend.
+This project was made with the next technologys:
 
-These are the notes from a meeting with the frontend developer that describe what endpoints the API needs to supply, as well as data shapes the frontend and backend have agreed meet the requirements of the application.
+- Node/Express
+- TypeScript
+- dotenv from NPM for managing environment variables
+- Postgres for the DataBase
+- db-migrate from NPM for migrations
+- jsonwebtoken
+- Jasmine from NPM Unit Test
+
+After clone the repository, you have to run the next command to install the dependencies:
+
+```
+npm install
+```
 
 ## API Endpoints
-
-### Products
-
-- Index : '/products' [GET]
-- Show : '/products/:id' [GET]
-- Create [token required] : '/products' [POST]
-- [OPTIONAL] Top 5 most popular products : '/products/top/:size' [GET]
-- [OPTIONAL] Products by category (args: product category) : '/products/category/:category' [get]
 
 ### Users
 
 - Index [token required] : '/users' [GET]
-- Show [token required] : '/users/:id'
-- Create N[token required] : '/users' [POST]
+- Show [token required] : '/users/:user_id' [GET]
+- Create [token required] : '/users' [POST]
+- Destroy '/users/:user_id' [POST]
+- Authenticate '/user/login' [POST]
+
+### Products
+
+- Index : '/products' [GET]
+- Show : '/products/:product_id' [GET]
+- Create [token required] : '/products' [POST]
+- Destroy : '/products/:product_id' [POST]
 
 ### Orders
 
-- Current Order by user (args: user id)[token required] '/orders/users/:user_id' [GET]
-- [OPTIONAL] Completed Orders by user (args: user id)[token required] : '/orders/users/:id/orders-completed' [GET]
+- Index : '/orders' [GET]
+- Show : '/orders/:orders_id' [GET]
+- Create : '/orders' [POST]
+- Destroy : '/orders/:orders_id' [POST]
 
 ## Data Shapes
 
-### Product
-
-- id
-- name
-- price
-- [OPTIONAL] category Table: Products (id:primary key, name:varchar, price:number, category:varchar)
-
 ### User
 
-- id
+- user_id
 - firstName
 - lastName
-- password Table: Users (id:primary key, firstName:varchar, lastName:varchar , password:string)
+- username
+- password
+- role
+
+Table: users (user_id:primary key, firstname:varchar, lastName:varchar , username:varchar, password:varchar, role:varchar)
+
+### Product
+
+- product_id
+- name
+- price
+
+Table: products(product_id:primary key, name:varchar, price:varchar)
 
 ### Orders
 
-- id
-- id of each product in the order
-- quantity of each product in the order
-- user_id
-- status of order (active or complete) Table: Orders (id:primary key, product_id:number[foreign key to products table], quantity:number , user_id:number [foreign key to users table], status: varchar)
-
-### Orders-Products table
-
-- id
-- id of each product in the order
-- order_id
+- product_id from products table
+- quantity
+- status_id from status table
+- user_id from users table
