@@ -16,6 +16,15 @@ After clone the repository, you have to run the next command to install the depe
 npm install
 ```
 
+For run the application:
+
+```
+1. npm run build
+2. npm run start
+```
+
+For test the application:
+
 ## API Endpoints
 
 ### Users
