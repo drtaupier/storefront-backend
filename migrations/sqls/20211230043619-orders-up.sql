@@ -5,6 +5,6 @@ product_id INTEGER,
 quantity SMALLINT DEFAULT 1,
 status_id INTEGER,
 user_id INTEGER,
-FOREIGN KEY (product_id) REFERENCES products(product_id),
-FOREIGN KEY (status_id) REFERENCES order_status(status_id),
-FOREIGN KEY (user_id) REFERENCES users(user_id));
+FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE ON UPDATE CASCADE,
+FOREIGN KEY (status_id) REFERENCES order_status(status_id) ON DELETE CASCADE ON UPDATE CASCADE,
+FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE);
