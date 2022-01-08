@@ -19,60 +19,53 @@ npm install
 For run the application:
 
 ```
-1. npm run build
-2. npm run start
+- npm run build
 ```
 
-For test the application:
+## Intructions to use:
 
-## API Endpoints
+Create user:
 
-### Users
+- CREATE USER full_stack_user WITH PASSWORD 'Pass1234';
 
-- Index [token required] : '/users' [GET]
-- Show [token required] : '/users/:user_id' [GET]
-- Create [token required] : '/users' [POST]
-- Destroy '/users/:user_id' [POST]
-- Authenticate '/user/login' [POST]
+You can follow the next steps:
 
-### Products
+1. CREATE DATABASE storefront;
+2. CREATE DATABASE storefront_test;
+3. GRANT ALL PRIVILEGES ON DATABASE storefront TO full_stack_user;
+4. GRANT ALL PRIVILEGES ON DATABASE storefront_test TO full_stack_user;
 
-- Index : '/products' [GET]
-- Show : '/products/:product_id' [GET]
-- Create [token required] : '/products' [POST]
-- Destroy : '/products/:product_id' [POST]
+## .env data:
 
-### Orders
+You will need add .env file with the next data:
 
-- Index : '/orders' [GET]
-- Show : '/orders/:orders_id' [GET]
-- Create : '/orders' [POST]
-- Destroy : '/orders/:orders_id' [POST]
+```
+PORT=3000
+POSTGRES_HOST=127.0.0.1
+POSTGRES_DB=storefront
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=password123
+POSTGRES_TEST_DB=storefront_test
+ENV=dev
+BCRYPT_PASSWORD=holamundo
+SALT_ROUNDS=10
+TOKEN_SECRET=palabrasecreta123
+```
 
-## Data Shapes
+Then, you have to run the next command:
 
-### User
+```
+- db-migrate up
+```
 
-- user_id
-- firstName
-- lastName
-- username
-- password
-- role
+## Testing
 
-Table: users (user_id:primary key, firstname:varchar, lastName:varchar , username:varchar, password:varchar, role:varchar)
+```
+- npm run test
+```
 
-### Product
+## Server
 
-- product_id
-- name
-- price
-
-Table: products(product_id:primary key, name:varchar, price:varchar)
-
-### Orders
-
-- product_id from products table
-- quantity
-- status_id from status table
-- user_id from users table
+```
+- npm run start
+```
