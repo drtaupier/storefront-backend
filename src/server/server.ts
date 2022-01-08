@@ -4,7 +4,7 @@ import morgan from 'morgan';
 import userRoutes from './handlers/user';
 import productRoutes from './handlers/products';
 import ordersRoutes from './handlers/orders';
-
+import orders_productsRoutes from './handlers/orders_products';
 const app: express.Application = express();
 const port = 3000;
 
@@ -18,6 +18,7 @@ app.get('/', (_req: Request, res: Response) => {
 userRoutes(app);
 productRoutes(app);
 ordersRoutes(app);
+orders_productsRoutes(app);
 
 app.listen(port, () => {
 	console.log(`Server started at localhost ${port}`);
