@@ -1,7 +1,19 @@
 import { Product, ProductStore } from '../products';
 const store = new ProductStore();
+import { User, UserStore } from '../user';
+const userStore = new UserStore();
 
 describe('Product Model', function () {
+	beforeAll(async () => {
+		const result = await userStore.create({
+			firstname: 'David',
+			lastname: 'Rivera',
+			username: 'drtaupier',
+			password: 'password123',
+			role_id: 1,
+		});
+	});
+
 	it('should have an index method', function () {
 		expect(store.index).toBeDefined();
 	});
@@ -27,7 +39,7 @@ describe('Product Model', function () {
 		});
 	});
 
-	it('Show method should return the correct product', async () => {
+	it('index method should return a list of products', async () => {
 		const result = await store.show('1');
 		expect(result).toEqual({
 			product_id: 1,
