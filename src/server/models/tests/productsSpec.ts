@@ -32,6 +32,17 @@ describe('Product Model', function () {
 			name: 'Coffee Americano',
 			price: 4.99,
 		});
+		expect(result).toEqual(
+			jasmine.objectContaining({
+				product_id: 1,
+				name: 'Coffee Americano',
+				price: 4.99,
+			})
+		);
+	});
+
+	it('Show method should return a specific product', async () => {
+		const result = await store.show('1');
 		expect(result).toEqual({
 			product_id: 1,
 			name: 'Coffee Americano',
@@ -39,12 +50,13 @@ describe('Product Model', function () {
 		});
 	});
 
-	it('index method should return a list of products', async () => {
-		const result = await store.show('1');
-		expect(result).toEqual({
-			product_id: 1,
-			name: 'Coffee Americano',
-			price: 4.99,
-		});
+	it('Index method should return a list of products', async () => {
+		const result = await store.index();
+		expect(result).toEqual(
+			jasmine.objectContaining({
+				name: 'Coffee Americano',
+				price: 4.99,
+			})
+		);
 	});
 });
