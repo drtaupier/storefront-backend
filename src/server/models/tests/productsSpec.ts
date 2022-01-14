@@ -34,7 +34,6 @@ describe('Product Model', function () {
 		});
 		expect(result).toEqual(
 			jasmine.objectContaining({
-				product_id: 1,
 				name: 'Coffee Americano',
 				price: 4.99,
 			})
@@ -52,11 +51,12 @@ describe('Product Model', function () {
 
 	it('Index method should return a list of products', async () => {
 		const result = await store.index();
-		expect(result).toEqual(
-			jasmine.objectContaining({
+		expect(result).toEqual([
+			{
+				product_id: 1,
 				name: 'Coffee Americano',
 				price: 4.99,
-			})
-		);
+			},
+		]);
 	});
 });
