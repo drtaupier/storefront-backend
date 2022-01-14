@@ -35,7 +35,7 @@ export class Orders_productsStore {
 	async create(op: Orders_products): Promise<Orders_products> {
 		try {
 			const sql =
-				'INSERT INTO orders_products (quantity, orders_id, product_id) VALUES ($1, $2, $3)';
+				'INSERT INTO orders_products (quantity, orders_id, product_id) VALUES ($1, $2, $3) RETURNING *';
 			const conn = await Client.connect();
 			const result = await conn.query(sql, [
 				op.quantity,
