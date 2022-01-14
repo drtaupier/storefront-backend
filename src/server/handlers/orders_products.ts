@@ -8,13 +8,21 @@ import verifyAuthToken from '../middlewares/auth';
 const store = new Orders_productsStore();
 
 const index = async (_req: Request, res: Response) => {
-	const orders = await store.index();
-	res.json(orders);
+	try {
+		const orders = await store.index();
+		res.json(orders);
+	} catch (error) {
+		res.status(400).json(error);
+	}
 };
 
 const show = async (req: Request, res: Response) => {
-	const orders = await store.show(req.params.orders_products_id);
-	res.json(orders);
+	try {
+		const orders = await store.show(req.params.orders_products_id);
+		res.json(orders);
+	} catch (error) {
+		res.status(400).json(error);
+	}
 };
 
 const create = async (req: Request, res: Response) => {
