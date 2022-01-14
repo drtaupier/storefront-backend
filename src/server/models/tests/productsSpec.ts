@@ -30,12 +30,12 @@ describe('Product Model', function () {
 	it('Create method should add a product', async () => {
 		const result = await store.create({
 			name: 'Coffee Americano',
-			price: 4.99,
+			price: 4,
 		});
 		expect(result).toEqual(
 			jasmine.objectContaining({
 				name: 'Coffee Americano',
-				price: 4.99,
+				price: 4,
 			})
 		);
 	});
@@ -45,7 +45,7 @@ describe('Product Model', function () {
 		expect(result).toEqual({
 			product_id: 1,
 			name: 'Coffee Americano',
-			price: 4.99,
+			price: 4,
 		});
 	});
 
@@ -55,7 +55,7 @@ describe('Product Model', function () {
 			{
 				product_id: 1,
 				name: 'Coffee Americano',
-				price: 4.99,
+				price: 4,
 			},
 		]);
 	});
