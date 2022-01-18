@@ -1,3 +1,4 @@
+import client from '../../database';
 import { Product, ProductStore } from '../products';
 const store = new ProductStore();
 import { User, UserStore } from '../user';
@@ -8,13 +9,13 @@ describe('Product Model', function () {
 		const result = await userStore.create({
 			firstname: 'David',
 			lastname: 'Rivera',
-			username: 'drtaupier',
+			username: 'drtaupier_test',
 			password: 'password123',
 			role_id: 1,
 		});
 	});
 
-	it('should have an index method', function () {
+	it('should have an index method', () => {
 		expect(store.index).toBeDefined();
 	});
 	it('Should have a show method', () => {
