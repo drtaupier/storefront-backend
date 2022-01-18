@@ -23,3 +23,5 @@ orders_productsRoutes(app);
 app.listen(port, () => {
 	console.log(`Server started at localhost ${port}`);
 });
+
+export default app;
