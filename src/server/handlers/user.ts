@@ -7,7 +7,7 @@ dotenv.config();
 
 const store = new UserStore();
 
-const index = async (req: Request, res: Response) => {
+const index = async (_req: Request, res: Response) => {
 	try {
 		const users = await store.index();
 		res.json(users);
@@ -68,7 +68,7 @@ const userRoutes = (app: express.Application): void => {
 	app.get('/users', verifyAuthToken, index);
 	app.get('/users/:user_id', verifyAuthToken, show);
 	app.post('/users/register', create);
-	app.post('/users/:user_id', verifyAuthToken, destroy);
+	app.delete('/users/:user_id', verifyAuthToken, destroy);
 	app.post('/user/login', authenticate);
 };
 
