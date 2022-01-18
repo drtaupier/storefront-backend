@@ -5,13 +5,21 @@ import verifyAuthToken from '../middlewares/auth';
 const store = new ProductStore();
 
 const index = async (_req: Request, res: Response) => {
-	const products = await store.index();
-	res.json(products);
+	try {
+		const products = await store.index();
+		res.json(products);
+	} catch (error) {
+		res.status(400).json(error);
+	}
 };
 
 const show = async (req: Request, res: Response) => {
-	const product = await store.show(req.params.product_id);
-	res.json(product);
+	try {
+		const product = await store.show(req.params.product_id);
+		res.json(product);
+	} catch (error) {
+		res.status(400).json(error);
+	}
 };
 
 const create = async (req: Request, res: Response) => {
@@ -28,16 +36,20 @@ const create = async (req: Request, res: Response) => {
 };
 
 const destroy = async (req: Request, res: Response) => {
-	const product = await store.delete(req.params.product_id);
-	console.log(product);
-	res.json(product);
+	try {
+		const product = await store.delete(req.params.product_id);
+		console.log(product);
+		res.json(product);
+	} catch (error) {
+		res.status(400).json(error);
+	}
 };
 
 const productRoutes = (app: express.Application) => {
 	app.get('/products', verifyAuthToken, index);
 	app.get('/products/:product_id', verifyAuthToken, show);
 	app.post('/products', verifyAuthToken, create);
-	app.post('/products/:product_id', verifyAuthToken, destroy);
+	app.delete('/products/:product_id', verifyAuthToken, destroy);
 };
 
 export default productRoutes;
