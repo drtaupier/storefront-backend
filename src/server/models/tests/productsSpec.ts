@@ -9,7 +9,7 @@ describe('Product Model', function () {
 		const result = await userStore.create({
 			firstname: 'David',
 			lastname: 'Rivera',
-			username: 'drtaupier_test',
+			username: 'drtaupier_test1',
 			password: 'password123',
 			role_id: 1,
 		});
