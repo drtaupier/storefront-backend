@@ -48,44 +48,35 @@ describe('User Model', () => {
 				firstname: 'Flor',
 				lastname: 'Lopez',
 				username: 'flopez_test',
-				password: '$2b$10$kDtVwsXLLzEVmdH/HE9XEeKW8MRKNpcQwdJeCXgBwRvrlePb3SyB6',
-				role_id: 1,
-			});
-			expect(result).toEqual({
-				user_id: 2,
-				firstname: 'Flor',
-				lastname: 'Lopez',
-				username: 'flopez_test',
 				password: 'password123',
 				role_id: 1,
 			});
+			expect(result.firstname).toBe('Flor');
+			expect(result.lastname).toBe('Lopez');
+			expect(result.username).toBe('flopez_test');
+			expect(result.role_id).toBe(1);
 		});
-		// it('Authenticate method should return the authenticate user', async () => {
-		// 	const token = await store.authenticate(username, password);
-		// 	expect(response.status).toEqual(200);
-		// });
 	});
+
+	// describe('Users endpoints testing', () => {
+	// 	let token: string;
+	// 	it('posts to /users endpoint, create a new user', async () => {
+	// 		const response = await request
+	// 			.post('/users/register')
+	// 			.set({ 'API-Key': 'foobar', Accept: 'application/json' })
+	// 			.send({
+	// 				firstname: 'Flor',
+	// 				lastname: 'Lopez',
+	// 				username: 'flopez_test',
+	// 				password: process.env.POSTGRES_TEST_DB as string,
+	// 				role_id: 1,
+	// 			});
+	// 		token = 'Pass ' + response.body;
+	// 		expect(response.status).toEqual(200);
+	// 	});
+
+	// 	it('Get "/users" get all the users', async () => {
+	// 		const response = await request.get('/users').set('Authorization', token);
+	// 		expect(response.status).toEqual(200);
+	// 	});
 });
-
-// describe('Users endpoints testing', () => {
-// 	let token: string;
-// 	it('posts to /users endpoint, create a new user', async () => {
-// 		const response = await request
-// 			.post('/users/register')
-// 			.set({ 'API-Key': 'foobar', Accept: 'application/json' })
-// 			.send({
-// 				firstname: 'Flor',
-// 				lastname: 'Lopez',
-// 				username: 'flopez_test',
-// 				password: process.env.POSTGRES_TEST_DB as string,
-// 				role_id: 1,
-// 			});
-// 		token = 'Pass ' + response.body;
-// 		expect(response.status).toEqual(200);
-// 	});
-
-// 	it('Get "/users" get all the users', async () => {
-// 		const response = await request.get('/users').set('Authorization', token);
-// 		expect(response.status).toEqual(200);
-// 	});
-// });
