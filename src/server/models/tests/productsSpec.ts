@@ -9,12 +9,11 @@ describe('Product Model', function () {
 		const result = await userStore.create({
 			firstname: 'David',
 			lastname: 'Rivera',
-			username: 'drtaupier_test1',
+			username: 'drtaupier_test',
 			password: 'password123',
 			role_id: 1,
-		});
+		} as User);
 	});
-
 	it('should have an index method', () => {
 		expect(store.index).toBeDefined();
 	});
