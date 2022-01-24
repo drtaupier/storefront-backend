@@ -1,9 +1,9 @@
-import express, { Request, response, Response } from 'express';
 import { User, UserStore } from '../user';
-import dotenv from 'dotenv';
-import jwt from 'jsonwebtoken';
-dotenv.config();
+import supertest from 'supertest';
 const store = new UserStore();
+import app from '../../server';
+import { response } from 'express';
+const request = supertest(app);
 
 describe('User Model', () => {
 	describe('Test method exists', () => {
@@ -25,22 +25,27 @@ describe('User Model', () => {
 	});
 
 	describe('Test user model logic', () => {
+		let token: string;
 		const user = {
 			firstname: 'David',
 			lastname: 'Rivera',
-			username: 'drtaupier_test1',
+			username: 'drtaupier_test',
 			password: 'password123',
 			role_id: 1,
 		} as User;
 
 		beforeAll(async () => {
-			const response = await store.authenticate(
-				user.username,
-				user.password as string
-			);
+			const response = await request
+				.post('/user/login')
+				.send({
+					username: 'drtaupier_test',
+					password: 'password123',
+				})
+				.set('Accept', 'application/json');
+			token = 'Bearer ' + response.body;
 		});
 		afterAll(async () => {
-			const result = await store.delete('1');
+			const result = await store.delete('2');
 		});
 
 		it('Create method should add a user', async () => {
@@ -50,33 +55,24 @@ describe('User Model', () => {
 				username: 'flopez_test',
 				password: 'password123',
 				role_id: 1,
-			});
+			} as User);
+			expect(result.user_id).toBe(2);
 			expect(result.firstname).toBe('Flor');
 			expect(result.lastname).toBe('Lopez');
 			expect(result.username).toBe('flopez_test');
 			expect(result.role_id).toBe(1);
 		});
+		it('This method get all users from DB', async () => {
+			const response = await request.get('/users').set('Authorization', token);
+			expect(response.status).toEqual(200);
+		});
+		it('This method get one user from DB', async () => {
+			const response = await request.get('/users/2').set('Authorization', token);
+			expect(response.status).toBe(200);
+		});
+		it('This method delete one user from DB', async () => {
+			const response = await request.delete('/users/2').set('Authorization', token);
+			expect(response.status).toBe(200);
+		});
 	});
-
-	// describe('Users endpoints testing', () => {
-	// 	let token: string;
-	// 	it('posts to /users endpoint, create a new user', async () => {
-	// 		const response = await request
-	// 			.post('/users/register')
-	// 			.set({ 'API-Key': 'foobar', Accept: 'application/json' })
-	// 			.send({
-	// 				firstname: 'Flor',
-	// 				lastname: 'Lopez',
-	// 				username: 'flopez_test',
-	// 				password: process.env.POSTGRES_TEST_DB as string,
-	// 				role_id: 1,
-	// 			});
-	// 		token = 'Pass ' + response.body;
-	// 		expect(response.status).toEqual(200);
-	// 	});
-
-	// 	it('Get "/users" get all the users', async () => {
-	// 		const response = await request.get('/users').set('Authorization', token);
-	// 		expect(response.status).toEqual(200);
-	// 	});
 });
