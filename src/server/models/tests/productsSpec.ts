@@ -5,14 +5,24 @@ import { User, UserStore } from '../user';
 const userStore = new UserStore();
 
 describe('Product Model', function () {
+	const user = {
+		firstname: 'David',
+		lastname: 'Rivera',
+		username: 'drtaupier_test',
+		password: 'password123',
+		role_id: 1,
+	} as User;
+	const product = {
+		name: 'Coffee Americano',
+		price: 4,
+	} as Product;
+
 	beforeAll(async () => {
-		const result = await userStore.create({
-			firstname: 'David',
-			lastname: 'Rivera',
-			username: 'drtaupier_test',
-			password: 'password123',
-			role_id: 1,
-		} as User);
+		const createUser = await userStore.create(user);
+	});
+	afterAll(async () => {
+		const deleteUser = await userStore.delete('2');
+		const deleteProduct = await store.delete('2');
 	});
 	it('should have an index method', () => {
 		expect(store.index).toBeDefined();
@@ -28,22 +38,18 @@ describe('Product Model', function () {
 	});
 
 	it('Create method should add a product', async () => {
-		const result = await store.create({
+		const result = await store.create(product);
+		expect(result).toEqual({
+			product_id: 2,
 			name: 'Coffee Americano',
 			price: 4,
 		});
-		expect(result).toEqual(
-			jasmine.objectContaining({
-				name: 'Coffee Americano',
-				price: 4,
-			})
-		);
 	});
 
 	it('Show method should return a specific product', async () => {
-		const result = await store.show('1');
+		const result = await store.show('2');
 		expect(result).toEqual({
-			product_id: 1,
+			product_id: 2,
 			name: 'Coffee Americano',
 			price: 4,
 		});
@@ -53,7 +59,7 @@ describe('Product Model', function () {
 		const result = await store.index();
 		expect(result).toEqual([
 			{
-				product_id: 1,
+				product_id: 2,
 				name: 'Coffee Americano',
 				price: 4,
 			},
