@@ -18,11 +18,12 @@ describe('Product Model', function () {
 	} as Product;
 
 	beforeAll(async () => {
+		const createProduct = await store.create(product);
 		const createUser = await userStore.create(user);
 	});
 	afterAll(async () => {
 		const deleteUser = await userStore.delete('2');
-		const deleteProduct = await store.delete('2');
+		const deleteProduct = await store.delete('1');
 	});
 	it('should have an index method', () => {
 		expect(store.index).toBeDefined();
@@ -38,18 +39,21 @@ describe('Product Model', function () {
 	});
 
 	it('Create method should add a product', async () => {
-		const result = await store.create(product);
+		const result = await store.create({
+			name: 'Tuna sandwich',
+			price: 5,
+		});
 		expect(result).toEqual({
 			product_id: 2,
-			name: 'Coffee Americano',
-			price: 4,
+			name: 'Tuna sandwich',
+			price: 5,
 		});
 	});
 
 	it('Show method should return a specific product', async () => {
-		const result = await store.show('2');
+		const result = await store.show('1');
 		expect(result).toEqual({
-			product_id: 2,
+			product_id: 1,
 			name: 'Coffee Americano',
 			price: 4,
 		});
@@ -59,9 +63,14 @@ describe('Product Model', function () {
 		const result = await store.index();
 		expect(result).toEqual([
 			{
-				product_id: 2,
+				product_id: 1,
 				name: 'Coffee Americano',
 				price: 4,
+			},
+			{
+				product_id: 2,
+				name: 'Tuna sandwich',
+				price: 5,
 			},
 		]);
 	});
