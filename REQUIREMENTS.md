@@ -55,14 +55,12 @@ These are the notes from a meeting with the frontend developer that describe wha
 ### Orders
 
 - orders_id - SERIAL PRIMARY KEY
-- product_id - FOREIGN KEY (product_id) REFERENCES products(product_id)
-- quantity SMALLINT
 - status_id INTEGER from status table
 - user_id FOREIGN KEY (user_id) REFERENCES users(user_id)
 
 ### Orders-Products
 
 - orders_products_id - SERIAL PRIMARY KEY
-- quantity - SMALLINT
+- quantity - INTEGER
 - orders_id INTEGER REFERENCES orders(orders_id)
 - product_id INTEGER REFERENCES products(product_id)
