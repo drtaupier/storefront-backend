@@ -17,8 +17,6 @@ const show = async (req: Request, res: Response) => {
 const create = async (req: Request, res: Response) => {
 	try {
 		const order: Order = {
-			product_id: req.body.product_id,
-			quantity: req.body.quantity,
 			status_id: req.body.status_id,
 			user_id: req.body.user_id,
 		};
@@ -32,10 +30,7 @@ const create = async (req: Request, res: Response) => {
 const destroy = async (req: Request, res: Response) => {
 	try {
 		const order = await store.delete(req.params.orders_id);
-		res.json({
-			status: 'ok',
-			msg: 'Deleted',
-		});
+		res.status(200).json(order);
 	} catch (error) {
 		res.status(400).json(error);
 	}
