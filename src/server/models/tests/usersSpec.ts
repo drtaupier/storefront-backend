@@ -2,7 +2,6 @@ import { User, UserStore } from '../user';
 import supertest from 'supertest';
 const store = new UserStore();
 import app from '../../server';
-import { response } from 'express';
 const request = supertest(app);
 
 describe('User Model', () => {
@@ -35,6 +34,7 @@ describe('User Model', () => {
 		} as User;
 
 		beforeAll(async () => {
+			const createUser = await store.create(user);
 			const response = await request
 				.post('/user/login')
 				.send({
@@ -45,7 +45,7 @@ describe('User Model', () => {
 			token = 'Bearer ' + response.body;
 		});
 		afterAll(async () => {
-			const result = await store.delete('2');
+			const deleteUser = await store.delete('3');
 		});
 
 		it('Create method should add a user', async () => {
@@ -56,7 +56,7 @@ describe('User Model', () => {
 				password: 'password123',
 				role_id: 1,
 			} as User);
-			expect(result.user_id).toBe(2);
+			expect(result.user_id).toBe(4);
 			expect(result.firstname).toBe('Flor');
 			expect(result.lastname).toBe('Lopez');
 			expect(result.username).toBe('flopez_test');
@@ -67,11 +67,11 @@ describe('User Model', () => {
 			expect(response.status).toEqual(200);
 		});
 		it('This method get one user from DB', async () => {
-			const response = await request.get('/users/2').set('Authorization', token);
+			const response = await request.get('/users/4').set('Authorization', token);
 			expect(response.status).toBe(200);
 		});
 		it('This method delete one user from DB', async () => {
-			const response = await request.delete('/users/2').set('Authorization', token);
+			const response = await request.delete('/users/4').set('Authorization', token);
 			expect(response.status).toBe(200);
 		});
 	});
