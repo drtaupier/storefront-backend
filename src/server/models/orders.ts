@@ -2,8 +2,6 @@ import Client from '../database';
 
 export type Order = {
 	orders_id?: number;
-	product_id: number;
-	quantity: number;
 	status_id: number;
 	user_id: number;
 };
@@ -36,19 +34,14 @@ export class OrderStore {
 	async create(o: Order): Promise<Order> {
 		try {
 			const sql =
-				'INSERT INTO orders (product_id, quantity, status_id, user_id) VALUES ($1, $2, $3, $4)';
+				'INSERT INTO orders (status_id, user_id) VALUES ($1, $2) RETURNING *';
 			const conn = await Client.connect();
-			const result = await conn.query(sql, [
-				o.product_id,
-				o.quantity,
-				o.status_id,
-				o.user_id,
-			]);
+			const result = await conn.query(sql, [o.status_id, o.user_id]);
 			const order = result.rows[0];
 			conn.release();
 			return order;
 		} catch (error) {
-			throw new Error(`Cannot create the order ${o.product_id}. Error: ${error}`);
+			throw new Error(`Cannot create the order ${o.orders_id}. Error: ${error}`);
 		}
 	}
 
