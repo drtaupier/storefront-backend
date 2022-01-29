@@ -104,9 +104,6 @@ describe('User Model', () => {
 					password: 'password123',
 					role_id: 2,
 				});
-				if (password) {
-					return true;
-				}
 				expect(result).toEqual({
 					firstname: 'Jackie',
 					lastname: 'Pinedo',
