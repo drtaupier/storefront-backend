@@ -41,7 +41,7 @@ export class UserStore {
 			const sql =
 				'INSERT INTO users (firstname, lastname, username, password, role_id) VALUES ($1, $2, $3, $4, $5) RETURNING *';
 			const hash = bcrypt.hashSync(
-				u.password + process.env.BCRYPT_PASSWORD,
+				u.password + process.env.PAPPER,
 				parseInt(process.env.SALT_ROUNDS as unknown as string)
 			);
 			const result = await conn.query(sql, [
@@ -79,9 +79,7 @@ export class UserStore {
 		console.log(result);
 		if (result.rows.length) {
 			const newUser = result.rows[0];
-			if (
-				bcrypt.compareSync(password + process.env.BCRYPT_PASSWORD, newUser.password)
-			) {
+			if (bcrypt.compareSync(password + process.env.PAPPER, newUser.password)) {
 				return newUser;
 			} else {
 				throw new Error('The password is wrong, please try again.');
