@@ -35,7 +35,7 @@ const create = async (req: Request, res: Response) => {
 			role_id: req.body.role_id,
 		};
 		const newUser = await store.create(user);
-		res.json(newUser);
+		res.status(201).json(newUser);
 	} catch (error) {
 		res.status(400).json(error);
 	}
