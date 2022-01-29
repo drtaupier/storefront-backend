@@ -104,12 +104,17 @@ describe('User Model', () => {
 					password: 'password123',
 					role_id: 2,
 				});
-				const hash = await store.authenticate(jpinedo.username, jpinedo.password);
+				if (password) {
+					return true;
+				}
 				expect(result).toEqual({
 					firstname: 'Jackie',
 					lastname: 'Pinedo',
 					username: 'jpinedo_test',
-					password: hash,
+					password: bcrypt.compareSync(
+						'password123' + process.env.PAPPER,
+						jpinedo.password
+					),
 					role_id: 2,
 				});
 			});
