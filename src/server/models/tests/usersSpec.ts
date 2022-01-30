@@ -104,29 +104,18 @@ describe('User Model', () => {
 					password: 'password123',
 					role_id: 2,
 				});
-				expect(result).toEqual({
-					firstname: 'Jackie',
-					lastname: 'Pinedo',
-					username: 'jpinedo_test',
-					password: bcrypt.compareSync(
-						'password123' + process.env.PAPPER,
-						jpinedo.password
-					),
-					role_id: 2,
-				});
+				expect(result.firstname).toEqual('Jackie');
+				expect(result.lastname).toEqual('Pinedo');
+				expect(result.username).toEqual('jpinedo_test');
+				expect(
+					bcrypt.compareSync('password123' + process.env.PAPPER, result.password)
+				).toBeTruthy();
 			});
 			it('This method should return all users', async () => {
 				const result = await store.index();
-				const hash: string = await store.authenticate(
-					drtaupier.username,
-					drtaupier.password
-				);
-				const hash1: string = await store.authenticate(
-					jpinedo.username,
-					jpinedo.password
-				);
-				expect(result).toEqual(hash, hash1);
+				expect(result.length).toEqual(2);
 			});
+
 			it('This method should return a specific user', async () => {
 				const result = await store.show('5');
 				expect(result.user_id).toBe(5);
@@ -134,6 +123,11 @@ describe('User Model', () => {
 				expect(result.lastname).toBe('Pinedo');
 				expect(result.username).toBe('jpinedo_test');
 				expect(result.role_id).toBe(2);
+			});
+			it('This method should remove a specific user', async () => {
+				store.delete('5');
+				const result = await store.index();
+				expect(result.length).toEqual(1);
 			});
 		});
 	});
