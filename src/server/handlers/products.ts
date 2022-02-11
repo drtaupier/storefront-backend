@@ -39,7 +39,7 @@ const destroy = async (req: Request, res: Response) => {
 	try {
 		const product = await store.delete(req.params.product_id);
 		console.log(product);
-		res.json(product);
+		res.status(200).json(product);
 	} catch (error) {
 		res.status(400).json(error);
 	}
