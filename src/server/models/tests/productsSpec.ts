@@ -26,6 +26,7 @@ describe('Product Model', () => {
 	describe('Product models', () => {
 		let token: string;
 		const user = {
+			//user_id: 3,
 			firstname: 'David',
 			lastname: 'Rivera',
 			username: 'drtaupier_test',
@@ -45,18 +46,17 @@ describe('Product Model', () => {
 			token = 'Bearer ' + response.body;
 		});
 		afterAll(async () => {
-			await userStore.delete('2');
-			await store.delete('2');
+			await userStore.delete('3');
 		});
 
 		it('This model should create a product', async () => {
 			const response = await request
 				.post('/products')
+				.set('Authorization', token)
 				.send({
 					name: 'Basil, Tomato and mozzarella sandwich',
 					price: 5,
-				})
-				.set('Authorization', token);
+				});
 			expect(response.status).toEqual(201);
 		});
 		it('This model should get all the products', async () => {
@@ -64,12 +64,12 @@ describe('Product Model', () => {
 			expect(response.status).toEqual(200);
 		});
 		it('This method should get a specific product', async () => {
-			const response = await request.get('/products/1').set('Authorization', token);
+			const response = await request.get('/products/2').set('Authorization', token);
 			expect(response.status).toEqual(200);
 		});
 		it('This method should remove a specific product', async () => {
 			const response = await request
-				.delete('/products/1')
+				.delete('/products/3')
 				.set('Authorization', token);
 			expect(response.status).toEqual(200);
 		});
@@ -82,16 +82,16 @@ describe('Product Model', () => {
 				price: 5,
 			});
 			expect(result).toEqual({
-				product_id: 2,
+				product_id: 4,
 				name: 'Tuna sandwich',
 				price: 5,
 			});
 		});
 
 		it('Show method should return a specific product', async () => {
-			const result = await store.show('2');
+			const result = await store.show('4');
 			expect(result).toEqual({
-				product_id: 2,
+				product_id: 4,
 				name: 'Tuna sandwich',
 				price: 5,
 			});
@@ -101,14 +101,14 @@ describe('Product Model', () => {
 			const result = await store.index();
 			expect(result).toEqual([
 				{
-					product_id: 2,
+					product_id: 4,
 					name: 'Tuna sandwich',
 					price: 5,
 				},
 			]);
 		});
 		it('Delete method should remove a producto from the list', async () => {
-			store.delete('2');
+			store.delete('4');
 			const result = await store.index();
 			expect(result).toEqual([]);
 		});
