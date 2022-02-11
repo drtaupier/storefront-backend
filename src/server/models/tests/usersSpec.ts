@@ -30,6 +30,7 @@ describe('User Model', () => {
 		let token: string;
 
 		const drtaupier = {
+			//user_id: 4,
 			firstname: 'David',
 			lastname: 'Rivera',
 			username: 'drtaupier_test',
@@ -38,6 +39,7 @@ describe('User Model', () => {
 		} as User;
 
 		const jpinedo = {
+			//user_id: 6,
 			firstname: 'Jackie',
 			lastname: 'Pinedo',
 			username: 'jpinedo_test',
@@ -45,16 +47,14 @@ describe('User Model', () => {
 			role_id: 2,
 		} as User;
 
-		const psw = async (user: User) => {
-			const firstname = user.firstname;
-			const lastname = user.lastname;
-			const username = user.username;
-			const password = user.password;
-			const role_id = user.role_id;
-
-			const hash = await store.authenticate(user.username, user.password);
-			return hash;
-		};
+		const flopez = {
+			//user_id: 5,
+			firstname: 'Flor',
+			lastname: 'Lopez',
+			username: 'flopez_test',
+			password: 'password123',
+			role_id: 1,
+		} as User;
 
 		beforeAll(async () => {
 			const createUser = await store.create(drtaupier);
@@ -68,17 +68,11 @@ describe('User Model', () => {
 			token = 'Bearer ' + response.body;
 		});
 		afterAll(async () => {
-			const deleteUser = await store.delete('3');
+			const deleteUser = await store.delete('4');
 		});
 
 		it('Create method should add a user', async () => {
-			const result = await request.post('/users/register').send({
-				firstname: 'Flor',
-				lastname: 'Lopez',
-				username: 'flopez_test',
-				password: 'password123',
-				role_id: 1,
-			});
+			const result = await request.post('/users/register').send(flopez);
 
 			expect(result.status).toEqual(201);
 		});
@@ -97,13 +91,7 @@ describe('User Model', () => {
 
 		describe('Users handlers', () => {
 			it('This method should create a user', async () => {
-				const result = await store.create({
-					firstname: 'Jackie',
-					lastname: 'Pinedo',
-					username: 'jpinedo_test',
-					password: 'password123',
-					role_id: 2,
-				});
+				const result = await store.create(jpinedo);
 				expect(result.firstname).toEqual('Jackie');
 				expect(result.lastname).toEqual('Pinedo');
 				expect(result.username).toEqual('jpinedo_test');
@@ -117,15 +105,14 @@ describe('User Model', () => {
 			});
 
 			it('This method should return a specific user', async () => {
-				const result = await store.show('5');
-				expect(result.user_id).toBe(5);
+				const result = await store.show('6');
+				expect(result.user_id).toBe(6);
 				expect(result.firstname).toBe('Jackie');
 				expect(result.lastname).toBe('Pinedo');
 				expect(result.username).toBe('jpinedo_test');
-				expect(result.role_id).toBe(2);
 			});
 			it('This method should remove a specific user', async () => {
-				store.delete('5');
+				store.delete('6');
 				const result = await store.index();
 				expect(result.length).toEqual(1);
 			});
