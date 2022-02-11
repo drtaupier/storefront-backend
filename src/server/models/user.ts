@@ -15,7 +15,8 @@ export class UserStore {
 	async index(): Promise<User[]> {
 		try {
 			const conn = await Client.connect();
-			const sql = 'SELECT * FROM users';
+			const sql =
+				'SELECT u.user_id, u.firstname, u.lastname, u.username, u.password, r.role FROM users AS u INNER JOIN roles AS r ON u.role_id=r.role_id';
 			const result = await conn.query(sql);
 			conn.release();
 			return result.rows;
@@ -25,7 +26,8 @@ export class UserStore {
 	}
 	async show(user_id: string): Promise<User> {
 		try {
-			const sql = 'SELECT * FROM users WHERE user_id=($1)';
+			const sql =
+				'SELECT u.user_id, u.firstname, u.lastname, u.username, u.password, r.role FROM users AS u INNER JOIN roles AS r ON u.role_id=r.role_id and u.user_id=($1)';
 			const conn = await Client.connect();
 			const result = await conn.query(sql, [user_id]);
 			conn.release();
