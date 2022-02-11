@@ -2,7 +2,7 @@ import Client from '../database';
 
 export type Order = {
 	orders_id?: number;
-	status_id: number;
+	status_id?: number;
 	user_id: number;
 };
 
@@ -10,7 +10,8 @@ export class OrderStore {
 	async index(): Promise<Order[]> {
 		try {
 			const conn = await Client.connect();
-			const sql = 'SELECT * FROM orders';
+			const sql =
+				'SELECT o.orders_id, op.quantity, p.name, os.order_status, u.username FROM orders_products AS op INNER JOIN orders AS o ON op.orders_id=o.orders_id JOIN products AS p ON op.product_id=p.product_id JOIN order_status AS os ON o.status_id=os.status_id JOIN users AS u ON o.user_id=u.user_id';
 			const result = await conn.query(sql);
 			conn.release();
 			return result.rows;
@@ -21,13 +22,26 @@ export class OrderStore {
 
 	async show(orders_id: string): Promise<Order> {
 		try {
-			const sql = 'SELECT * FROM orders WHERE orders_id=($1)';
+			const sql =
+				'SELECT o.orders_id, op.quantity, p.name, os.order_status, u.username FROM orders_products AS op INNER JOIN orders AS o ON op.orders_id=o.orders_id JOIN products AS p ON op.product_id=p.product_id JOIN order_status AS os ON o.status_id=os.status_id JOIN users AS u ON o.user_id=u.user_id AND o.order_id=($1)';
 			const conn = await Client.connect();
 			const result = await conn.query(sql, [orders_id]);
 			conn.release();
 			return result.rows[0];
 		} catch (error) {
-			throw new Error(`Could not find user ${orders_id}. Error: ${error}`);
+			throw new Error(`Could not find order ${orders_id}. Error: ${error}`);
+		}
+	}
+
+	async getbyUser(user_id: string): Promise<Order> {
+		try {
+			const sql = 'SELECT * FROM orders WHERE user_id=($1)';
+			const conn = await Client.connect();
+			const result = await conn.query(sql);
+			conn.release();
+			return result.rows[0];
+		} catch (error) {
+			throw new Error(`Could not find the user ${user_id}`);
 		}
 	}
 
