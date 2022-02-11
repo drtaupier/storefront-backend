@@ -10,7 +10,7 @@ const store = new Orders_productsStore();
 const index = async (_req: Request, res: Response) => {
 	try {
 		const orders = await store.index();
-		res.json(orders);
+		res.status(200).json(orders);
 	} catch (error) {
 		res.status(400).json(error);
 	}
@@ -42,10 +42,7 @@ const create = async (req: Request, res: Response) => {
 const destroy = async (req: Request, res: Response) => {
 	try {
 		const order = await store.delete(req.params.orders_products_id);
-		res.json({
-			status: 'ok',
-			msg: 'Deleted',
-		});
+		res.status(200).json(order);
 	} catch (error) {
 		res.status(400).json(error);
 	}
