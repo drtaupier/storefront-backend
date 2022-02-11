@@ -16,9 +16,10 @@ const show = async (req: Request, res: Response) => {
 
 const create = async (req: Request, res: Response) => {
 	try {
+		const userId: number = parseInt(req.params.user_id);
 		const order: Order = {
-			status_id: req.body.status_id,
-			user_id: req.body.user_id,
+			status_id: 1,
+			user_id: userId,
 		};
 		const newOrder = await store.create(order);
 		res.status(201).json(newOrder);
@@ -39,7 +40,7 @@ const destroy = async (req: Request, res: Response) => {
 const ordersRoutes = (app: express.Application) => {
 	app.get('/orders', verifyAuthToken, index);
 	app.get('/orders/:orders_id', verifyAuthToken, show);
-	app.post('/orders', verifyAuthToken, create);
+	app.post('/orders/:user_id', verifyAuthToken, create);
 	app.delete('/orders/:orders_id', verifyAuthToken, destroy);
 };
 
