@@ -1,10 +1,9 @@
-import { User, UserStore } from '../user';
 import { Order, OrderStore } from '../orders';
 import { Product, ProductStore } from '../products';
 import { Orders_products, Orders_productsStore } from '../orders_products';
 import supertest from 'supertest';
 import app from '../../server';
-const userStore = new UserStore();
+
 const store = new OrderStore();
 const productStore = new ProductStore();
 const orderProductStore = new Orders_productsStore();
@@ -12,15 +11,6 @@ const request = supertest(app);
 
 describe('Orders model', () => {
 	let token: string;
-	const user = {
-		//users_id: 2,
-		firstname: 'David',
-		lastname: 'Rivera',
-		username: 'drtaupier_test',
-		password: 'password123',
-		role_id: 1,
-	} as User;
-
 	const order = {
 		//order_id : 2,
 		status_id: 1,
@@ -36,12 +26,11 @@ describe('Orders model', () => {
 	const orderProduct = {
 		//orders_products_id: 3,
 		quantity: 1,
-		orders_id: 2,
-		product_id: 2,
+		orders_id: 1,
+		product_id: 1,
 	} as Orders_products;
 
 	beforeAll(async () => {
-		const createUser = await userStore.create(user);
 		const auth = await request
 			.post('/user/login')
 			.send({
@@ -50,15 +39,7 @@ describe('Orders model', () => {
 			})
 			.set('Accept', 'application/json');
 		token = 'Bearer ' + auth.body;
-		const createOrder = store.create(order);
-		const createProduct = productStore.create(product);
-		const createOrderProduct = orderProductStore.create(orderProduct);
-	});
-	afterAll(async () => {
-		await userStore.delete('2');
-		await productStore.delete('2');
-		//await store.delete('2');
-		await orderProductStore.delete('3');
+		await orderProductStore.create(orderProduct);
 	});
 
 	describe('Test method exists', () => {
@@ -78,7 +59,7 @@ describe('Orders model', () => {
 	describe('Test orders Models', () => {
 		it('Create method should add an order', async () => {
 			const result = await request
-				.post('/orders/2')
+				.post('/orders/1')
 				.send(order)
 				.set('Authorization', token);
 			expect(result.status).toEqual(201);
@@ -88,7 +69,7 @@ describe('Orders model', () => {
 			expect(result.status).toEqual(200);
 		});
 		it('This method get one specific order', async () => {
-			const result = await request.get('/orders/2	').set('Authorization', token);
+			const result = await request.get('/orders/1').set('Authorization', token);
 			expect(result.status).toEqual(200);
 		});
 	});
