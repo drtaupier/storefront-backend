@@ -34,7 +34,7 @@ describe('orders_products model', () => {
 	} as Order;
 
 	beforeAll(async () => {
-		const createUser = await userStore.create(user);
+		await userStore.create(user);
 		const response = await request
 			.post('/user/login')
 			.send({
@@ -43,14 +43,10 @@ describe('orders_products model', () => {
 			})
 			.set('Accept', 'application/json');
 		token = 'Bearer ' + response.body;
-		const createProduct = await productStore.create(product);
-		const createOrder = await orderStore.create(order);
+		await productStore.create(product);
+		await orderStore.create(order);
 	});
-	afterAll(async () => {
-		await userStore.delete('1');
-		await orderStore.delete('1');
-		await productStore.delete('1');
-	});
+
 	describe('Test method exist', () => {
 		it('Should have an index method', () => {
 			expect(store.index).toBeDefined();
