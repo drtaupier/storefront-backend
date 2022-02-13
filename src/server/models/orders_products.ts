@@ -24,7 +24,7 @@ export class Orders_productsStore {
 	async show(orders_products_id: string): Promise<Orders_products> {
 		try {
 			const sql =
-				'SELECT o.orders_id, op.orders_products_id, op.quantity, p.name, p.price, os.order_status, u.username FROM orders_products AS op INNER JOIN orders AS o ON op.orders_id=o.orders_id JOIN products AS p ON op.product_id=p.product_id JOIN order_status AS os ON o.status_id=os.status_id JOIN users AS u ON o.user_id=u.user_id AND o.orders_id=($1)';
+				'SELECT o.orders_id, op.orders_products_id, op.quantity, p.name, p.price, os.order_status, u.username FROM orders_products AS op INNER JOIN orders AS o ON op.orders_id=o.orders_id JOIN products AS p ON op.product_id=p.product_id JOIN order_status AS os ON o.status_id=os.status_id JOIN users AS u ON o.user_id=u.user_id AND op.orders_products_id=($1)';
 			const conn = await Client.connect();
 			const result = await conn.query(sql, [orders_products_id]);
 			conn.release();
