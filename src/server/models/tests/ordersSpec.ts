@@ -17,12 +17,6 @@ describe('Orders model', () => {
 		user_id: 1,
 	} as Order;
 
-	const product = {
-		//product_id:2,
-		name: 'Olive Sandwich',
-		price: 6,
-	} as Product;
-
 	const orderProduct = {
 		//orders_products_id: 3,
 		quantity: 1,
@@ -39,7 +33,7 @@ describe('Orders model', () => {
 			})
 			.set('Accept', 'application/json');
 		token = 'Bearer ' + auth.body;
-		await orderProductStore.create(orderProduct);
+		// await orderProductStore.create(orderProduct);
 	});
 
 	describe('Test method exists', () => {
@@ -69,7 +63,11 @@ describe('Orders model', () => {
 			expect(result.status).toEqual(200);
 		});
 		it('This method get one specific order', async () => {
-			const result = await request.get('/orders/1').set('Authorization', token);
+			const result = await request.get('/orders/2').set('Authorization', token);
+			expect(result.status).toEqual(200);
+		});
+		it('Delete mothod should remove a specific order', async () => {
+			const result = await request.delete('/orders/2').set('Authorization', token);
 			expect(result.status).toEqual(200);
 		});
 	});
@@ -78,45 +76,29 @@ describe('Orders model', () => {
 		it('create method should add a order', async () => {
 			const result = await store.create(order);
 			expect(result).toEqual({
-				orders_id: 4,
+				orders_id: 3,
 				status_id: 1,
 				user_id: 1,
 			});
 		});
 		it('index method should return a list of orders', async () => {
 			const result = await store.index();
-			expect(result).toEqual([
-				{
-					orders_id: 2,
-					status_id: 1,
-					user_id: 1,
-				},
-				{
-					orders_id: 3,
-					status_id: 1,
-					user_id: 1,
-				},
-				{
-					orders_id: 4,
-					status_id: 1,
-					user_id: 1,
-				},
-			]);
+			expect(result.length).toEqual(2);
 		});
 		it('show method should return a the correct order', async () => {
-			const result = await store.show('2');
+			const result = await store.show('3');
 			expect(result).toEqual({
-				orders_id: 2,
+				orders_id: 3,
 				status_id: 1,
 				user_id: 1,
 			});
 		});
 		it('delete method should remove the order', async () => {
-			store.delete('2');
+			store.delete('3');
 			const result = await store.index();
 			expect(result).toEqual([
 				{
-					orders_id: 2,
+					orders_id: 1,
 					status_id: 1,
 					user_id: 1,
 				},
