@@ -29,17 +29,8 @@ describe('User Model', () => {
 	describe('Test user model logic', () => {
 		let token: string;
 
-		const drtaupier = {
-			//user_id: 4,
-			firstname: 'David',
-			lastname: 'Rivera',
-			username: 'drtaupier_test',
-			password: 'password123',
-			role_id: 1,
-		} as User;
-
 		const jpinedo = {
-			//user_id: 6,
+			//user_id: 3,
 			firstname: 'Jackie',
 			lastname: 'Pinedo',
 			username: 'jpinedo_test',
@@ -48,7 +39,7 @@ describe('User Model', () => {
 		} as User;
 
 		const flopez = {
-			//user_id: 5,
+			//user_id: 2,
 			firstname: 'Flor',
 			lastname: 'Lopez',
 			username: 'flopez_test',
@@ -57,7 +48,6 @@ describe('User Model', () => {
 		} as User;
 
 		beforeAll(async () => {
-			const createUser = await store.create(drtaupier);
 			const response = await request
 				.post('/user/login')
 				.send({
@@ -67,13 +57,9 @@ describe('User Model', () => {
 				.set('Accept', 'application/json');
 			token = 'Bearer ' + response.body;
 		});
-		afterAll(async () => {
-			const deleteUser = await store.delete('4');
-		});
 
 		it('Create method should add a user', async () => {
 			const result = await request.post('/users/register').send(flopez);
-
 			expect(result.status).toEqual(201);
 		});
 		it('This method get all users from DB', async () => {
@@ -85,7 +71,7 @@ describe('User Model', () => {
 			expect(response.status).toBe(200);
 		});
 		it('This method delete one user from DB', async () => {
-			const response = await request.delete('/users/4').set('Authorization', token);
+			const response = await request.delete('/users/2').set('Authorization', token);
 			expect(response.status).toBe(200);
 		});
 
@@ -105,14 +91,14 @@ describe('User Model', () => {
 			});
 
 			it('This method should return a specific user', async () => {
-				const result = await store.show('6');
-				expect(result.user_id).toBe(6);
+				const result = await store.show('3');
+				expect(result.user_id).toBe(3);
 				expect(result.firstname).toBe('Jackie');
 				expect(result.lastname).toBe('Pinedo');
 				expect(result.username).toBe('jpinedo_test');
 			});
 			it('This method should remove a specific user', async () => {
-				store.delete('6');
+				store.delete('3');
 				const result = await store.index();
 				expect(result.length).toEqual(1);
 			});
