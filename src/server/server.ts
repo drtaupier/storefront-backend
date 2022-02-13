@@ -9,6 +9,7 @@ const app: express.Application = express();
 const port = 3000;
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(morgan('dev'));
 
 app.get('/', (_req: Request, res: Response) => {
