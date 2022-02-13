@@ -11,7 +11,8 @@ export class Orders_productsStore {
 	async index(): Promise<Orders_products[]> {
 		try {
 			const conn = await Client.connect();
-			const sql = 'SELECT * FROM orders_products';
+			const sql =
+				'SELECT o.orders_id, op.quantity, p.name, p.price, os.order_status, u.username FROM orders_products AS op INNER JOIN orders AS o ON op.orders_id=o.orders_id JOIN products AS p ON op.product_id=p.product_id JOIN order_status AS os ON o.status_id=os.status_id JOIN users AS u ON o.user_id=u.user_id';
 			const result = await conn.query(sql);
 			conn.release();
 			return result.rows;
@@ -22,7 +23,8 @@ export class Orders_productsStore {
 
 	async show(orders_products_id: string): Promise<Orders_products> {
 		try {
-			const sql = 'SELECT * FROM orders_products WHERE orders_products_id=($1)';
+			const sql =
+				'SELECT o.orders_id, op.orders_products_id, op.quantity, p.name, p.price, os.order_status, u.username FROM orders_products AS op INNER JOIN orders AS o ON op.orders_id=o.orders_id JOIN products AS p ON op.product_id=p.product_id JOIN order_status AS os ON o.status_id=os.status_id JOIN users AS u ON o.user_id=u.user_id AND o.orders_id=($1)';
 			const conn = await Client.connect();
 			const result = await conn.query(sql, [orders_products_id]);
 			conn.release();
