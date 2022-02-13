@@ -23,7 +23,7 @@ describe('orders_products model', () => {
 
 	const product = {
 		// product_id:1,
-		name: 'Caffee Latte',
+		name: 'Cafe Latte',
 		price: 6,
 	} as Product;
 
@@ -107,21 +107,13 @@ describe('orders_products model', () => {
 				product_id: 1,
 			});
 		});
-		it('index method should return a list of orders', async () => {
+		it('index method should return a list of orders_products', async () => {
 			const result = await store.index();
-			expect(result).toEqual([
-				{
-					orders_products_id: 2,
-					quantity: 2,
-					orders_id: 1,
-					product_id: 1,
-				},
-			]);
+			expect(result.length).toEqual(1);
 		});
 		it('show method should return a specific orders_products', async () => {
 			const result = await store.show('2');
 			expect(result.orders_products_id).toEqual(2);
-			expect(result.quantity).toEqual(2);
 		});
 		it('Delete method should remove the order_products', async () => {
 			store.delete('2');
